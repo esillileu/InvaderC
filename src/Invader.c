@@ -8,11 +8,12 @@ KeyProcess key = { .loop = -1, .dx = 0, .dy = 0, .shotx = 0, .shoty = 0 };
 static int score = 0;
 
 static int play(int score_old);
-static int wait_key();
+static void reset_play();
 
 static void draw_all();
 static void draw_player_explode();
-static void reset_play();
+
+static int wait_key();
 
 int main()
 {
@@ -36,9 +37,9 @@ int main()
 	//intro
 	draw_fstring_center(&dbuf, -8, "You are the last pilot standing against the INVADER");
 	draw_fstring_center(&dbuf, -6, "Shoot them down before INVADER reach Earth");
-	draw_fstring_center(&dbuf,  4, "Press Space to CONTINUE ");
+	draw_fstring_center(&dbuf,  4, "Press Space to CONTINUE");
 	draw_back_buffer(&dbuf);
-	sleep(100);
+	sleep(200);
 	while(!wait_key());
 
 	//main loop
@@ -56,10 +57,10 @@ int main()
 			reset_play();
 
 			// death message
-			if (player.live == PLAYER_MISS    ) draw_fstring_center(&dbuf, - 8, "You missed the INVADER and it reached Earth");
-			if (player.live == PLAYER_SUICIDE ) draw_fstring_center(&dbuf, - 8, "You committed suicide out of fear of the INVADER");
-			if (player.live == PLAYER_SHOTDOWN) draw_fstring_center(&dbuf, - 8, "You were shot down by INVADER");
-			if (player.live == PLAYER_CRASH   ) draw_fstring_center(&dbuf, - 8, "You crashed into the INVADER");
+			if (player.live == PLAYER_MISS    ) draw_fstring_center(&dbuf, -8, "You missed the INVADER and it reached Earth");
+			if (player.live == PLAYER_SUICIDE ) draw_fstring_center(&dbuf, -8, "You committed suicide out of fear of the INVADER");
+			if (player.live == PLAYER_SHOTDOWN) draw_fstring_center(&dbuf, -8, "You were shot down by INVADER");
+			if (player.live == PLAYER_CRASH   ) draw_fstring_center(&dbuf, -8, "You crashed into the INVADER");
 
 			draw_fstring_center(&dbuf, -4, "Score: %5d", score);
 			
@@ -74,21 +75,6 @@ int main()
 	
 	free_dbuffer(&dbuf);
 	return 0;
-}
-
-static void draw_all()
-{
-	draw_2d(&dbuf, &player.obj);
-
-	for (int i = 0; i < PLAYER_B_MAX; i++)
-		if (player.bullet[i].shot) draw_2d(&dbuf, &player.bullet[i].obj);
-
-
-	for (int i = 0; i < ENEMY_COUNT; i++)
-	{
-		if (enemies[i].live != 0)	draw_2d(&dbuf, &enemies[i].obj);
-		if (enemies[i].bullet.shot)	draw_2d(&dbuf, &enemies[i].bullet);
-	}
 }
 
 static int play(int score_old)
@@ -129,17 +115,43 @@ static int play(int score_old)
 
 			draw_back_buffer(&dbuf);
 
-			//colide
+			//colide 
 			colide = check_colide_all(&score);
-			if (check_bound_out()) { player.live = PLAYER_MISS;  break; }
-			if (key.loop==0) { player.live = PLAYER_SUICIDE;  break; }
-			if (colide) { player.live = colide;  break; }        
-			
 			counter.enemy_period = counter.enemy_period > TICK_FRAME ? TICK_FRAME * ENEMY_VE - ENEMY_AC * ((score + score_old) / SCORE_BASIC) : 0;
+
+			//gameover condition
+			if (check_bound_out() ){ player.live = PLAYER_MISS;		break; }
+			if (key.loop==0		  ){ player.live = PLAYER_SUICIDE;	break; }
+			if (colide			  ){ player.live = colide;			break; }        
 		}
 	}
 	key.loop = 1;
 	return score + score_old;
+}
+
+static void reset_play()
+{
+	init_tick(&counter, TICK_FRAME, TICK_FRAME * ENEMY_VE, TICK_FRAME * PLAYER_B_DELAY);
+	score = 0;
+	key.loop = 1;
+	key.dx = 0;
+	key.dy = 0;
+	player.live = 1;
+}
+
+static void draw_all()
+{
+	draw_2d(&dbuf, &player.obj);
+
+	for (int i = 0; i < PLAYER_B_MAX; i++)
+		if (player.bullet[i].shot) draw_2d(&dbuf, &player.bullet[i].obj);
+
+
+	for (int i = 0; i < ENEMY_COUNT; i++)
+	{
+		if (enemies[i].live != 0)	draw_2d(&dbuf, &enemies[i].obj);
+		if (enemies[i].bullet.shot)	draw_2d(&dbuf, &enemies[i].bullet);
+	}
 }
 
 static void draw_player_explode()
@@ -157,16 +169,6 @@ static void draw_player_explode()
 			i++;
 		}
 	}
-}
-
-static void reset_play()
-{
-	init_tick(&counter, TICK_FRAME, TICK_FRAME * ENEMY_VE, TICK_FRAME * PLAYER_B_DELAY);
-	score = 0;
-	key.loop = 1;
-	key.dx = 0;
-	key.dy = 0;
-	player.live = 1;
 }
 
 static int wait_key()
