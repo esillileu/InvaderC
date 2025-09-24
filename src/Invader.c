@@ -12,7 +12,7 @@ static void draw_all(void);
 
 int main(void)
 {
-	int loop = 1;
+	int stage = 0;
 
 	init_dbuffer(&dbuf, WINDOW_W, WINDOW_H);
 	init_kps(&kps);
@@ -27,8 +27,7 @@ int main(void)
 	draw_fstring_center(&dbuf,  6, "Press ESC to EXIT");
 	draw_back_buffer(&dbuf);
 
-	loop = wait_kps(&kps);
-	if (loop == 0) { free_dbuffer(&dbuf); return 0; } 
+	if (wait_kps(&kps) == LOOP_END) { free_dbuffer(&dbuf); return 0; }
 
 	//intro
 	draw_fstring_center(&dbuf, -8, "You are the last pilot standing against the INVADER");
@@ -36,12 +35,14 @@ int main(void)
 	draw_fstring_center(&dbuf,  4, "Press Space to CONTINUE");
 	draw_back_buffer(&dbuf);
 	sleep_ms(200);
+
 	while(!wait_kps(&kps));
 
 	//main loop
 	reset_play();
-	while (loop)
+	while (1)
 	{
+		stage++;
 		//reset objs
 		create_player();
 		create_enemies();
@@ -54,21 +55,22 @@ int main(void)
 			draw_player_explode(&dbuf, &counter);
 
 			// death message
-			if (player.live == PLAYER_MISS    ) draw_fstring_center(&dbuf, -8, "You missed the INVADER and it reached Earth");
-			if (player.live == PLAYER_SUICIDE ) draw_fstring_center(&dbuf, -8, "You committed suicide out of fear of the INVADER");
-			if (player.live == PLAYER_SHOTDOWN) draw_fstring_center(&dbuf, -8, "You were shot down by INVADER");
-			if (player.live == PLAYER_CRASH   ) draw_fstring_center(&dbuf, -8, "You crashed into the INVADER");
+			if (player.live == PLAYER_MISS)		draw_fstring_center(&dbuf, -8, "You missed the INVADER and it reached Earth");
+			if (player.live == PLAYER_SUICIDE)	draw_fstring_center(&dbuf, -8, "You committed suicide out of fear of the INVADER");
+			if (player.live == PLAYER_SHOTDOWN)	draw_fstring_center(&dbuf, -8, "You were shot down by INVADER");
+			if (player.live == PLAYER_CRASH)	draw_fstring_center(&dbuf, -8, "You crashed into the INVADER");
 
 			draw_fstring_center(&dbuf, -4, "Score: %5d", score);
-			
+
 			// info 
-			draw_fstring_center(&dbuf,  4, "Press Space to RESTART");
-			draw_fstring_center(&dbuf,  6, "Press ESC to EXIT");
+			draw_fstring_center(&dbuf, 4, "Press Space to RESTART");
+			draw_fstring_center(&dbuf, 6, "Press ESC to EXIT");
 			draw_back_buffer(&dbuf);
-			
+
 			if (!wait_kps(&kps)) break;
 			reset_play();
 		}
+		else draw_player_to_init(&dbuf, &counter);
 	}
 	
 	free_dbuffer(&dbuf);

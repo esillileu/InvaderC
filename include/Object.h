@@ -30,6 +30,7 @@ void create_player(void);
 void update_player_position(KeyProcess* p_kps);
 int update_player_bullet(KeyProcess* p_kps, int cooltime);
 void draw_player_explode(DoubleBuffer* p_dbuf, TickCounter* p_counter);
+void draw_player_to_init(DoubleBuffer* p_dbuf, TickCounter* p_counter);
 
 // types
 struct _OBJECT2D {

@@ -1,5 +1,7 @@
 #include "Object.h"
 
+#define SIGN(x) (((x) > 0) - ((x) < 0))
+
 Player player;
 
 static int choose_bullet_frame(Bullet* bullet) {
@@ -103,6 +105,24 @@ void draw_player_explode(DoubleBuffer* p_dbuf, TickCounter* p_counter )
 			draw_obj(p_dbuf, &player.obj);
 			draw_back_buffer(p_dbuf);
 			i++;
+		}
+	}
+}
+
+void draw_player_to_init(DoubleBuffer* p_dbuf, TickCounter* p_counter)
+{
+	Pos pos = { COORD_INIT_X - player.obj.sprite->w, COORD_INIT_Y - player.obj.sprite->h };
+	while (pos.X != player.obj.pos.X || pos.Y != player.obj.pos.Y)
+	{
+		tick(p_counter);
+
+		if (is_player_tick(p_counter))
+		{
+			player.obj.pos.X += SIGN(pos.X - player.obj.pos.X);
+			player.obj.pos.Y += SIGN(pos.Y - player.obj.pos.Y);
+
+			draw_obj(p_dbuf, &player.obj);
+			draw_back_buffer(p_dbuf);
 		}
 	}
 }
