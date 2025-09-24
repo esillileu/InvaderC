@@ -20,6 +20,33 @@ Object2D create_obj(short x, short y, Sprite* sprite, Heatmap* heatmap)
     return obj;
 }
 
+void draw_obj(DoubleBuffer* p_dbuf, Object2D* obj)
+{
+    const size_t W = (size_t)obj->sprite->w;
+    const size_t H = (size_t)obj->sprite->h;
+    const size_t frame = (size_t)obj->current_frame;
+
+    short start_y = 0, end_y = H;
+    short start_x = 0, end_x = W;
+    short draw_x = obj->pos.X;
+    short draw_y = obj->pos.Y;
+
+    // cliff x
+    if (draw_x < 0) { start_x = -draw_x; draw_x = 0; }
+    if (draw_x + (end_x - start_x) > WINDOW_W)
+        end_x = start_x + (WINDOW_W - draw_x);
+
+    // cliff y
+    if (draw_y < 0) { start_y = -draw_y; draw_y = 0; }
+    if (draw_y + (end_y - start_y) > WINDOW_H - 1)
+        end_y = start_y + (WINDOW_H - 1 - draw_y);
+
+    draw_2d(
+        p_dbuf,obj->sprite->data, W, H, frame,
+        draw_x, draw_y, start_x, start_y, end_x, end_y
+    );
+}
+
 int check_colide(Object2D* a, Object2D* b)
 {
     int x1 = a->pos.X, w1 = a->heatmap->w, y1 = a->pos.Y, h1 = a->heatmap->h;

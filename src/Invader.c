@@ -1,9 +1,8 @@
-#pragma warning(disable : 4996)         
-#include "Main.h"
+#include "Object.h"
 
-TickManager counter;
+TickCounter counter;
 DoubleBuffer dbuf;
-KeyProcess key = { .loop = -1, .dx = 0, .dy = 0, .shotx = 0, .shoty = 0 };
+KeyProcess kps;
 
 static int score = 0;
 
@@ -11,15 +10,13 @@ static int play(int score_old);
 static void reset_play();
 
 static void draw_all();
-static void draw_player_explode();
-
-static int wait_key();
 
 int main()
 {
 	int loop = 1;
 
 	init_dbuffer(&dbuf, WINDOW_W, WINDOW_H);
+	init_kps(&kps);
 	
 	// title screen
 	draw_fstring_center(&dbuf, -8, "########  ###   ##    ######    #######   ########  ####### ");
@@ -31,7 +28,7 @@ int main()
 	draw_fstring_center(&dbuf,  6, "Press ESC to EXIT");
 	draw_back_buffer(&dbuf);
 
-	loop = wait_key();
+	loop = wait_kps(&kps);
 	if (loop == 0) { free_dbuffer(&dbuf); return 0; } 
 
 	//intro
@@ -39,22 +36,19 @@ int main()
 	draw_fstring_center(&dbuf, -6, "Shoot them down before INVADER reach Earth");
 	draw_fstring_center(&dbuf,  4, "Press Space to CONTINUE");
 	draw_back_buffer(&dbuf);
-	sleep(200);
-	while(!wait_key());
+	sleep_ms(200);
+	while(!wait_kps(&kps));
 
 	//main loop
 	reset_play();
 	while (loop)
 	{
-		create_player();
-		create_enemies();
 		score = play(score);
 		
 		// game over
-		if (player.live != 1)
+		if (player.live != PLAYER_LIVE)
 		{
-			draw_player_explode();
-			reset_play();
+			draw_player_explode(&dbuf, &counter);
 
 			// death message
 			if (player.live == PLAYER_MISS    ) draw_fstring_center(&dbuf, -8, "You missed the INVADER and it reached Earth");
@@ -69,7 +63,8 @@ int main()
 			draw_fstring_center(&dbuf,  6, "Press ESC to EXIT");
 			draw_back_buffer(&dbuf);
 			
-			loop = wait_key();
+			if (!wait_kps(&kps)) break;
+			reset_play();
 		}
 	}
 	
@@ -82,22 +77,22 @@ static int play(int score_old)
 	int colide, score = 0;
 	while (score < ENEMY_COUNT * SCORE_BASIC )
 	{
-		//tick & key update 
+		//tick & kps update 
 		tick(&counter);
-		update_key(&key);
+		update_kps(&kps);
 
-		//enemy tick
 		if (is_enemy_tick(&counter))
 		{
 			update_enemies_position();
 		}
-		//player tick
+
 		if (is_player_tick(&counter))
 		{
-			//update position
-			update_player_position(&key);
-			if (update_player_bullet(&key, is_shot_tick(&counter)))
-				reset_shot(&counter);
+			update_player_position(&kps);
+
+			//bullet shot & cooltime
+			if (update_player_bullet(&kps, is_shot_tick(&counter)))
+				reset_tick(&counter, &counter.shot_tick);
 
 			update_enemies_kill_frame();
 
@@ -106,11 +101,11 @@ static int play(int score_old)
 			draw_fstring_at(&dbuf, WINDOW_W - 11, 0, "score %5d", score + score_old);
 
 			//debug
-			draw_fstring_at(&dbuf, 0, WINDOW_H - 1, "debug x:%2d y:%2d dx:%2d dy:%2d shot:%2d %2d ep: %5d ",
+			draw_fstring_at(&dbuf, 0, WINDOW_H - 1, "debug x:%2d y:%2d dx:%2d dy:%2d shot:%2d %2d live: %5d ",
 				player.obj.pos.X, player.obj.pos.Y,
-				key.dx / (TICK_FRAME * PLAYER_VS) / 2, key.dy / (TICK_FRAME * PLAYER_VS),
-				key.shotx, key.shoty, 
-				counter.enemy_period
+				kps.dx / (TICK_FRAME * PLAYER_VS) / 2, kps.dy / (TICK_FRAME * PLAYER_VS),
+				kps.shotx, kps.shoty, 
+				player.live
 			);
 
 			draw_back_buffer(&dbuf);
@@ -121,63 +116,39 @@ static int play(int score_old)
 
 			//gameover condition
 			if (check_bound_out() ){ player.live = PLAYER_MISS;		break; }
-			if (key.loop==0		  ){ player.live = PLAYER_SUICIDE;	break; }
+			if (kps.loop==0		  ){ player.live = PLAYER_SUICIDE;	break; }
 			if (colide			  ){ player.live = colide;			break; }        
 		}
 	}
-	key.loop = 1;
 	return score + score_old;
 }
 
 static void reset_play()
 {
+	//reset objs
+	create_player();
+	create_enemies();
+
+	//reset tick
 	init_tick(&counter, TICK_FRAME, TICK_FRAME * ENEMY_VE, TICK_FRAME * PLAYER_B_DELAY);
-	score = 0;
-	key.loop = 1;
-	key.dx = 0;
-	key.dy = 0;
+
+	//reset kps
+	kps.loop = -1, kps.dx = 0, kps.dy = 0;
 	player.live = 1;
+	score = 0;
 }
 
 static void draw_all()
 {
-	draw_2d(&dbuf, &player.obj);
+	draw_obj(&dbuf, &player.obj);
 
 	for (int i = 0; i < PLAYER_B_MAX; i++)
-		if (player.bullet[i].shot) draw_2d(&dbuf, &player.bullet[i].obj);
+		if (player.bullet[i].shot) draw_obj(&dbuf, &player.bullet[i].obj);
 
 
 	for (int i = 0; i < ENEMY_COUNT; i++)
 	{
-		if (enemies[i].live != 0)	draw_2d(&dbuf, &enemies[i].obj);
-		if (enemies[i].bullet.shot)	draw_2d(&dbuf, &enemies[i].bullet);
-	}
-}
-
-static void draw_player_explode()
-{
-	int i = PLAYER_EXP_1;
-	while (i <= PLAYER_EXP_END)
-	{
-		tick(&counter);
-
-		if (is_player_tick(&counter))
-		{
-			player.obj.current_frame = i;
-			draw_2d(&dbuf, &player.obj);
-			draw_back_buffer(&dbuf);
-			i++;
-		}
-	}
-}
-
-static int wait_key()
-{
-	while (1)
-	{
-		update_key(&key);
-		if (key.loop==1) return 1; // reset
-		else if (key.loop==0) return 0;//exit
-		else continue;
+		if (enemies[i].live != 0)	draw_obj(&dbuf, &enemies[i].obj);
+		if (enemies[i].bullet.shot)	draw_obj(&dbuf, &enemies[i].bullet);
 	}
 }

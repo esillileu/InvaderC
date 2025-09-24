@@ -90,3 +90,19 @@ int update_player_bullet(KeyProcess* p_key, int cooltime)
 	return sucess;
 }
 
+void draw_player_explode(DoubleBuffer* p_dbuf, TickCounter* p_counter )
+{
+	int i = PLAYER_EXP_1;
+	while (i <= PLAYER_EXP_END)
+	{
+		tick(p_counter);
+
+		if (is_player_tick(p_counter))
+		{
+			player.obj.current_frame = i;
+			draw_obj(p_dbuf, &player.obj);
+			draw_back_buffer(p_dbuf);
+			i++;
+		}
+	}
+}

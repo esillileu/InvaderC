@@ -2,62 +2,19 @@
 
 #include "Console.h"
 
-
+//dbuf func
 static void gotoxy(HANDLE hbuf, COORD pt) { SetConsoleCursorPosition(hbuf, pt); }
 
 static HANDLE get_back_buffer(DoubleBuffer* p_dbuf) { return p_dbuf->hbuf[p_dbuf->idx]; }
 
+static void clear_back_buffer(DoubleBuffer* p_dbuf) {
+	DWORD n;
+	COORD org = { 0, 0 };
+	HANDLE buf = get_back_buffer(p_dbuf);
 
-void init_tick(TickManager* p_counter, short player_period, short enemy_period, short shot_period)
-{
-	p_counter->player_tick = p_counter->tick;
-	p_counter->enemy_tick = p_counter->tick;
-	p_counter->shot_tick = p_counter->tick;
-
-	p_counter->player_period = player_period;
-	p_counter->enemy_period = enemy_period;
-	p_counter->shot_period = shot_period;
-
+	FillConsoleOutputCharacterW(buf, ' ',
+		(DWORD)p_dbuf->size.X * p_dbuf->size.Y, org, &n);
 }
-
-void tick(TickManager* p_counter)
-{
-	p_counter->tick = GetTickCount64();
-
-}
-
-int is_player_tick(TickManager* p_counter)
-{
-	if (p_counter->tick - p_counter->player_tick > p_counter->player_period)
-	{
-		p_counter->player_tick = p_counter->tick;
-		return 1;
-	}
-	return 0;
-}
-
-int is_enemy_tick(TickManager* p_counter)
-{
-	if (p_counter->tick - p_counter->enemy_tick > p_counter->enemy_period)
-	{
-		p_counter->enemy_tick = p_counter->tick;
-		return 1;
-	}
-	return 0;
-}
-
-int is_shot_tick(TickManager* p_counter)
-{
-	if (p_counter->tick - p_counter->shot_tick > p_counter->shot_period)
-		return 1;
-	return 0;
-}
-
-int reset_shot(TickManager* p_counter)
-{
-	p_counter->shot_tick = GetTickCount64();
-}
-
 
 void init_dbuffer(DoubleBuffer* p_dbuf, short width, short height)
 {
@@ -114,61 +71,10 @@ void free_dbuffer(DoubleBuffer* p_dbuf) {
 	SetConsoleActiveScreenBuffer(GetStdHandle(STD_OUTPUT_HANDLE));
 }
 
-void clear_back_buffer(DoubleBuffer* p_dbuf) {
-	DWORD n;
-	COORD org = { 0, 0 };
-	HANDLE buf = get_back_buffer(p_dbuf);
-
-	FillConsoleOutputCharacterW(buf, ' ',
-		(DWORD)p_dbuf->size.X * p_dbuf->size.Y, org, &n);
-}
-
 void draw_back_buffer(DoubleBuffer* p_dbuf) {
 	SetConsoleActiveScreenBuffer(get_back_buffer(p_dbuf));
 	p_dbuf->idx ^= 1;
 	clear_back_buffer(p_dbuf);
-}
-
-
-void draw_2d(DoubleBuffer* p_dbuf, Object2D* obj)
-{
-	HANDLE buf;
-	
-	DWORD wr;
-	COORD pos;
-
-	const size_t W = (size_t)obj->sprite->w;
-	const size_t H = (size_t)obj->sprite->h;
-	const size_t frame = (size_t)obj->current_frame;
-	const char* base = obj->sprite->data + frame * (W * H);
-
-	buf = get_back_buffer(p_dbuf);
-	pos = obj->pos;
-
-	int start_y = 0, end_y = H;
-	int start_x = 0, end_x = W;
-	int draw_x = obj->pos.X;
-	int draw_y = obj->pos.Y;
-
-	// X 클리핑
-	if (draw_x < 0) { start_x = -draw_x; draw_x = 0; }
-	if (draw_x + (end_x - start_x) > WINDOW_W)
-		end_x = start_x + (WINDOW_W - draw_x);
-
-	// Y 클리핑
-	if (draw_y < 0) { start_y = -draw_y; draw_y = 0; }
-	if (draw_y + (end_y - start_y) > WINDOW_H-1)
-		end_y = start_y + (WINDOW_H-1 - draw_y);
-
-	pos.X = draw_x;
-	pos.Y = draw_y;
-	for (int y = start_y; y < end_y; y++) 
-	{
-		gotoxy(buf, pos);
-		const char* row = base + y * W + start_x;
-		WriteConsoleA(buf, row, end_x - start_x, &wr, NULL);
-		pos.Y++;
-	}
 }
 
 void draw_fstring_at(DoubleBuffer* p_dbuf, short x, short y, const char* fmt, ...)
@@ -179,9 +85,9 @@ void draw_fstring_at(DoubleBuffer* p_dbuf, short x, short y, const char* fmt, ..
 	static char buf[512];
 
 	va_list ap; va_start(ap, fmt);
-	int n = _vsnprintf_s(buf, sizeof(buf), _TRUNCATE, fmt, ap );
+	int n = _vsnprintf_s(buf, sizeof(buf), _TRUNCATE, fmt, ap);
 	va_end(ap);
-	
+
 	gotoxy(hbuf, pos);
 
 	if (n < 0) n = (int)strlen(buf);           // 안전한 길이 보정
@@ -200,37 +106,126 @@ void draw_fstring_center(DoubleBuffer* p_dbuf, short y_offset, const char* fmt, 
 	va_end(ap);
 
 	if (n < 0) n = (int)strlen(buf);           // 안전한 길이 보정
-	pos.X = (WINDOW_W - n-1) / 2;
+	pos.X = (WINDOW_W - n - 1) / 2;
 	gotoxy(hbuf, pos);
 
 	WriteConsoleA(hbuf, buf, (DWORD)n, &wr, NULL);
 }
 
-
-void update_key(KeyProcess* p_kps)
+void draw_2d(DoubleBuffer* p_dbuf, char* data, short W, short H, short frame, 
+	short draw_x, short draw_y, short start_x, short start_y, short end_x, short end_y
+)
 {
-	// arrow key update
-	p_kps->dy += (GetAsyncKeyState(KEY_MOVE_DOWN)  & 0x8000 ? PLAYER_VY : 0) - (GetAsyncKeyState(KEY_MOVE_UP)   & 0x8000 ? PLAYER_VY : 0);
-	p_kps->dx += (GetAsyncKeyState(KEY_MOVE_RIGHT) & 0x8000 ? PLAYER_VX : 0) - (GetAsyncKeyState(KEY_MOVE_LEFT) & 0x8000 ? PLAYER_VX : 0);
-	
-	//attack key update
-	if		(GetAsyncKeyState(KEY_SHOT_LEFT) & 0x8000) p_kps->shotx = -2;
-	else if (GetAsyncKeyState(KEY_SHOT_RIGHT) & 0x8000) p_kps->shotx =  2;
-	else p_kps->shotx = 0;
+	HANDLE buf;
+	DWORD wr;
+	COORD pos = { draw_x , draw_y };
+	const char* base = data + frame * (W * H);
 
-	if		(GetAsyncKeyState(KEY_SHOT_UP) & 0x8000) p_kps->shoty = -1;
-	else if (GetAsyncKeyState(KEY_SHOT_DOWN) & 0x8000) p_kps->shoty =  1;
-	else p_kps->shoty = 0;
+	buf = get_back_buffer(p_dbuf);
+
+	for (int y = start_y; y < end_y; y++)
+	{
+		gotoxy(buf, pos);
+		const char* row = base + y * W + start_x;
+		WriteConsoleA(buf, row, end_x - start_x, &wr, NULL);
+		pos.Y++;
+	}
+}
+
+
+//tick function
+void init_tick(TickCounter* p_counter, short player_period, short enemy_period, short shot_period)
+{
+	p_counter->player_tick = p_counter->tick;
+	p_counter->enemy_tick = p_counter->tick;
+	p_counter->shot_tick = p_counter->tick;
+
+	p_counter->player_period = player_period;
+	p_counter->enemy_period = enemy_period;
+	p_counter->shot_period = shot_period;
+
+}
+
+void tick(TickCounter* p_counter)
+{
+	p_counter->tick = GetTickCount64();
+
+}
+
+int is_player_tick(TickCounter* p_counter)
+{
+	if (p_counter->tick - p_counter->player_tick > p_counter->player_period)
+	{
+		p_counter->player_tick = p_counter->tick;
+		return 1;
+	}
+	return 0;
+}
+
+int is_enemy_tick(TickCounter* p_counter)
+{
+	if (p_counter->tick - p_counter->enemy_tick > p_counter->enemy_period)
+	{
+		p_counter->enemy_tick = p_counter->tick;
+		return 1;
+	}
+	return 0;
+}
+
+int is_shot_tick(TickCounter* p_counter)
+{
+	if (p_counter->tick - p_counter->shot_tick > p_counter->shot_period)
+		return 1;
+	return 0;
+}
+
+int reset_tick(TickCounter* p_counter, ULONGLONG* tick) { *tick = GetTickCount64(); }
+
+
+//kps func
+void init_kps(KeyProcess* p_kps)
+{
+	p_kps->loop	 = -1;
+	p_kps->dx	 =  0;
+	p_kps->dy	 =  0;
+	p_kps->shotx =  0;
+	p_kps->shoty =  0;
+}
+
+void update_kps(KeyProcess* p_kps)
+{
+	// arrow kps update
+	p_kps->dy += (GetAsyncKeyState(KEY_MOVE_DOWN)  & 0x8000 ? PLAYER_VY : 0) 
+			   - (GetAsyncKeyState(KEY_MOVE_UP)    & 0x8000 ? PLAYER_VY : 0);
+	p_kps->dx += (GetAsyncKeyState(KEY_MOVE_RIGHT) & 0x8000 ? PLAYER_VX : 0) 
+		       - (GetAsyncKeyState(KEY_MOVE_LEFT)  & 0x8000 ? PLAYER_VX : 0);
+	
+	//attack kps update
+	if		(GetAsyncKeyState(KEY_SHOT_LEFT)	& 0x8000)	p_kps->shotx = -2;
+	else if (GetAsyncKeyState(KEY_SHOT_RIGHT)	& 0x8000)	p_kps->shotx =  2;
+	else													p_kps->shotx = 0;
+
+	if		(GetAsyncKeyState(KEY_SHOT_UP)	& 0x8000)	p_kps->shoty = -1;
+	else if (GetAsyncKeyState(KEY_SHOT_DOWN)& 0x8000)	p_kps->shoty =  1;
+	else												p_kps->shoty = 0;
 
 
 	//loop signal
-	if (GetAsyncKeyState(KEY_EXIT) & 0x8000) { p_kps->loop = 0; } //stop
-	else if (GetAsyncKeyState(KEY_RESTART) & 0x8000) { p_kps->loop = 1; } //start
-	else p_kps->loop = -1;	//none
+	if		(GetAsyncKeyState(KEY_RESTART)	& 0x8000) { p_kps->loop = LOOP_RESTART; } 
+	else if	(GetAsyncKeyState(KEY_EXIT)		& 0x8000) { p_kps->loop = LOOP_END; } 
+	else												p_kps->loop = LOOP_CONTINUE; 
 }
 
-
-void sleep(int ms)
+int wait_kps(KeyProcess* p_kps)
 {
-	Sleep(ms);
+	while (1)
+	{
+		update_kps(p_kps);
+		if (p_kps->loop == LOOP_CONTINUE) continue;
+		else return p_kps->loop;
+	}
 }
+
+
+//etc func
+void sleep_ms(int ms){ Sleep(ms); }

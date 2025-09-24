@@ -1,19 +1,23 @@
 #pragma once
 
-#include <windows.h>
-#include "Config.h"
+#include "Console.h"
 #include "Asset.h"
 
-typedef struct _KEYPROCESS KeyProcess;
 typedef struct _OBJECT2D Object2D;
 typedef struct _BULLET Bullet;
 typedef struct _ENEMY Enemy;
 typedef struct _PLAYER Player;
 
+// global variables
+extern Enemy enemies[ENEMY_COUNT];
+extern Player player;
+
+// Object.c
 Object2D create_obj(short x, short y, Sprite* sprite, Heatmap* heatmap);
 void init_obj(Object2D* obj, short x, short y, Sprite* sprite, Heatmap* heatmap);
 int check_colide(Object2D* obj1, Object2D* obj2);
 int check_colide_all(int* score);
+void draw_obj(DoubleBuffer* p_dbuf, Object2D* obj);
 
 // Enemy.c
 void create_enemies(void);
@@ -23,18 +27,15 @@ int check_bound_out(void);
 
 // Player.c
 void create_player(void);
-void update_player_position(KeyProcess* p_key);
-int update_player_bullet(KeyProcess* p_key, int cooltime);
+void update_player_position(KeyProcess* p_kps);
+int update_player_bullet(KeyProcess* p_kps, int cooltime);
+void draw_player_explode(DoubleBuffer* p_dbuf, TickCounter* p_counter);
 
-struct _KEYPROCESS {
-	int dx, dy;
-	short loop, shotx, shoty;
-};
-
+// types
 struct _OBJECT2D {
 	short current_frame;
 
-	COORD pos;
+	Pos pos;
 	Sprite* sprite;
 	Heatmap* heatmap;
 }; 
@@ -59,12 +60,11 @@ struct _PLAYER {
 	short live;
 };
 
-extern Enemy enemies[ENEMY_COUNT];
-extern Player player;
-
+// alias
 enum _PlayerStat {
-	PLAYER_CRASH=-3,
+	PLAYER_CRASH = -3,
 	PLAYER_SHOTDOWN,
 	PLAYER_SUICIDE,
-	PLAYER_MISS 
+	PLAYER_MISS, 
+	PLAYER_LIVE = 1
 };
