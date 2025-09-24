@@ -112,14 +112,20 @@ void draw_player_explode(DoubleBuffer* p_dbuf, TickCounter* p_counter )
 void draw_player_to_init(DoubleBuffer* p_dbuf, TickCounter* p_counter)
 {
 	Pos pos = { COORD_INIT_X - player.obj.sprite->w, COORD_INIT_Y - player.obj.sprite->h };
+	
+	short dx = pos.X - player.obj.pos.X, dy = pos.X - player.obj.pos.X;
+	short min = (dx < dy) ? dx : dy;
+	dx = (min ? dx / min : dx);
+	dy = (min ? dy / min : dy);
+
 	while (pos.X != player.obj.pos.X || pos.Y != player.obj.pos.Y)
 	{
 		tick(p_counter);
 
 		if (is_player_tick(p_counter))
 		{
-			player.obj.pos.X += SIGN(pos.X - player.obj.pos.X);
-			player.obj.pos.Y += SIGN(pos.Y - player.obj.pos.Y);
+			player.obj.pos.X += SIGN(pos.X - player.obj.pos.X) * dx;
+			player.obj.pos.Y += SIGN(pos.Y - player.obj.pos.Y) * dy;
 
 			draw_obj(p_dbuf, &player.obj);
 			draw_back_buffer(p_dbuf);

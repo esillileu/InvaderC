@@ -25,7 +25,7 @@
 #define PLAYER_B_DELAY	32
 
 // ENEMY
-#define ENEMY_COUNT		32
+#define ENEMY_COUNT		1
 #define ENEMY_ROW		8
 #define ENEMY_GAP		2
 
