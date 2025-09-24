@@ -42,6 +42,10 @@ int main(void)
 	reset_play();
 	while (loop)
 	{
+		//reset objs
+		create_player();
+		create_enemies();
+
 		score = play(score);
 		
 		// game over
@@ -100,11 +104,11 @@ static int play(int score_old)
 			draw_fstring_at(&dbuf, WINDOW_W - 11, 0, "score %5d", score + score_old);
 
 			//debug
-			draw_fstring_at(&dbuf, 0, WINDOW_H - 1, "debug x:%2d y:%2d dx:%2d dy:%2d shot:%2d %2d live: %5d ",
+			draw_fstring_at(&dbuf, 0, WINDOW_H - 1, "debug x:%2d y:%2d dx:%2d dy:%2d shot:%2d %2d score: %5d ",
 				player.obj.pos.X, player.obj.pos.Y,
 				kps.dx / (TICK_FRAME * PLAYER_VS) / 2, kps.dy / (TICK_FRAME * PLAYER_VS),
 				kps.shotx, kps.shoty, 
-				player.live
+				score
 			);
 
 			draw_back_buffer(&dbuf);
@@ -114,9 +118,9 @@ static int play(int score_old)
 			counter.enemy_period = counter.enemy_period > TICK_FRAME ? TICK_FRAME * ENEMY_VE - ENEMY_AC * ((score + score_old) / SCORE_BASIC) : 0;
 
 			//gameover condition
-			if (check_bound_out() ){ player.live = PLAYER_MISS;		break; }
-			if (kps.loop==0		  ){ player.live = PLAYER_SUICIDE;	break; }
-			if (colide			  ){ player.live = colide;			break; }        
+			if (check_bound_out()	){ player.live = PLAYER_MISS;		break; }
+			if (kps.loop == LOOP_END){ player.live = PLAYER_SUICIDE;	break; }
+			if (colide				){ player.live = colide;			break; }        
 		}
 	}
 	return score + score_old;
@@ -124,10 +128,6 @@ static int play(int score_old)
 
 static void reset_play(void)
 {
-	//reset objs
-	create_player();
-	create_enemies();
-
 	//reset tick
 	init_tick(&counter, TICK_FRAME, TICK_FRAME * ENEMY_VE, TICK_FRAME * PLAYER_B_DELAY);
 
