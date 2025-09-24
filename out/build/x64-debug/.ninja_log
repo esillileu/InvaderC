@@ -1,0 +1,9 @@
+# ninja log v6
+5	25	7803895104974216	C:/Users/USER/Desktop/project/InvaderC/out/build/x64-debug/CMakeFiles/cmake.verify_globs	c3c4f6b5bd58eac7
+26	60	7803895105263211	CMakeFiles/InvaderC.dir/src/Asset.c.obj	4150a5c567ca67cb
+30	230	7803895105263211	CMakeFiles/InvaderC.dir/src/Enemy.c.obj	b200aee0bfec1e06
+34	233	7803895105374731	CMakeFiles/InvaderC.dir/src/Object.c.obj	5a4337d3a08208f7
+28	235	7803895105263211	CMakeFiles/InvaderC.dir/src/Console.c.obj	ec61402e577ee17c
+36	237	7803895105374731	CMakeFiles/InvaderC.dir/src/Player.c.obj	e4c7bfdc9ffab125
+32	240	7803895105263211	CMakeFiles/InvaderC.dir/src/Invader.c.obj	8677e5cbcec061de
+241	395	7803895107455254	InvaderC.exe	4b2d5b5357dad7f

@@ -1,0 +1,44 @@
+#pragma once
+
+// WINDOW
+#define WINDOW_WIDTH	64
+#define	WINDOW_HEIGHT	32
+#define	WINDOW_FONTSIZE	12
+
+// PLAY
+#define TICK_FRAME		16
+#define SCORE_BASIC		100
+
+#define PLAYER_VX		8
+#define PLAYER_VY		4
+#define PLAYER_VE		2048
+
+#define PLAYER_BULLET_MAX	4
+#define PLAYER_BULLET_DELAY 32
+
+#define ENEMY_COUNT		32
+#define ENEMY_ROW		8
+#define ENEMY_GAP		2
+
+#define ENEMY_VE		16
+#define ENEMY_AC		2
+
+#define ENEMY_BULLET_SCALE	1
+
+// COORD
+#define COORD_INIT_X	WINDOW_WIDTH  / 2 
+#define COORD_INIT_Y	WINDOW_HEIGHT / 2
+
+// KEY
+#define KEY_MOVE_LEFT	'A'
+#define KEY_MOVE_RIGHT	'D'
+#define KEY_MOVE_UP		'W'
+#define KEY_MOVE_DOWN 	'S'
+
+#define KEY_SHOT_LEFT	VK_LEFT
+#define KEY_SHOT_RIGHT	VK_RIGHT
+#define KEY_SHOT_UP		VK_UP
+#define KEY_SHOT_DOWN	VK_DOWN
+
+#define KEY_EXIT		VK_ESCAPE
+#define KEY_RESTART		VK_SPACE
