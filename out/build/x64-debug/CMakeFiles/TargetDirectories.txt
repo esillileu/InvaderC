@@ -1,3 +1,0 @@
-C:/Users/USER/Desktop/project/InvaderC/out/build/x64-debug/CMakeFiles/InvaderC.dir
-C:/Users/USER/Desktop/project/InvaderC/out/build/x64-debug/CMakeFiles/edit_cache.dir
-C:/Users/USER/Desktop/project/InvaderC/out/build/x64-debug/CMakeFiles/rebuild_cache.dir

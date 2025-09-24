@@ -42,7 +42,6 @@
 *.idb
 *.pdb
 Debug/
-out/
 
 # Kernel Module Compile Results
 *.mod*
