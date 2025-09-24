@@ -7,11 +7,10 @@ KeyProcess kps;
 static int score = 0;
 
 static int play(int score_old);
-static void reset_play();
+static void reset_play(void);
+static void draw_all(void);
 
-static void draw_all();
-
-int main()
+int main(void)
 {
 	int loop = 1;
 
@@ -123,7 +122,7 @@ static int play(int score_old)
 	return score + score_old;
 }
 
-static void reset_play()
+static void reset_play(void)
 {
 	//reset objs
 	create_player();
@@ -138,7 +137,7 @@ static void reset_play()
 	score = 0;
 }
 
-static void draw_all()
+static void draw_all(void)
 {
 	draw_obj(&dbuf, &player.obj);
 

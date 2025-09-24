@@ -22,7 +22,7 @@ void draw_obj(DoubleBuffer* p_dbuf, Object2D* obj);
 // Enemy.c
 void create_enemies(void);
 void update_enemies_position(void);
-void update_enemies_kill_frame();
+void update_enemies_kill_frame(void);
 int check_bound_out(void);
 
 // Player.c

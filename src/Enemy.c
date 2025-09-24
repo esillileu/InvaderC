@@ -101,7 +101,7 @@ void update_enemies_position(void)
 	}
 }
 
-void update_enemies_kill_frame()
+void update_enemies_kill_frame(void)
 {
 	for (int i = 0; i < ENEMY_COUNT; i++)
 	{
@@ -118,7 +118,7 @@ void update_enemies_kill_frame()
 	}
 }
 
-int check_bound_out() {
+int check_bound_out(void) {
 	if (bound.pos.Y > WINDOW_H - enemies[0].obj.sprite->w +1) return 1;
 	else return 0;
 }
