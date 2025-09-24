@@ -21,22 +21,22 @@ int main()
 	init_dbuffer(&dbuf, WINDOW_W, WINDOW_H);
 	
 	// title screen
-	draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "########  ###   ##    ######    #######   ########  ####### ");
-	draw_fstring_center(&dbuf, WINDOW_H / 2 - 7, "   ##     ####  ##   ##    ##   ##    ##  ##        ##    ##");
-	draw_fstring_center(&dbuf, WINDOW_H / 2 - 6, "   ##     ## ## ##   ########   ##    ##  ########  ####### ");
-	draw_fstring_center(&dbuf, WINDOW_H / 2 - 5, "   ##     ##  ####   ##    ##   ##    ##  ##        ##    ##");
-	draw_fstring_center(&dbuf, WINDOW_H / 2 - 4, "########  ##   ###   ##    ##   #######   ########  ##    ##");
-	draw_fstring_center(&dbuf, WINDOW_H / 2 + 4, "Press Space to START ");
-	draw_fstring_center(&dbuf, WINDOW_H / 2 + 6, "Press ESC to EXIT");
+	draw_fstring_center(&dbuf, -8, "########  ###   ##    ######    #######   ########  ####### ");
+	draw_fstring_center(&dbuf, -7, "   ##     ####  ##   ##    ##   ##    ##  ##        ##    ##");
+	draw_fstring_center(&dbuf, -6, "   ##     ## ## ##   ########   ##    ##  ########  ####### ");
+	draw_fstring_center(&dbuf, -5, "   ##     ##  ####   ##    ##   ##    ##  ##        ##    ##");
+	draw_fstring_center(&dbuf, -4, "########  ##   ###   ##    ##   #######   ########  ##    ##");
+	draw_fstring_center(&dbuf,  4, "Press Space to START ");
+	draw_fstring_center(&dbuf,  6, "Press ESC to EXIT");
 	draw_back_buffer(&dbuf);
 
 	loop = wait_key();
 	if (loop == 0) { free_dbuffer(&dbuf); return 0; } 
 
 	//intro
-	draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "You are the last pilot standing against the INVADER");
-	draw_fstring_center(&dbuf, WINDOW_H / 2 - 6, "Shoot them down before INVADER reach Earth");
-	draw_fstring_center(&dbuf, WINDOW_H / 2 + 4, "Press Space to CONTINUE ");
+	draw_fstring_center(&dbuf, -8, "You are the last pilot standing against the INVADER");
+	draw_fstring_center(&dbuf, -6, "Shoot them down before INVADER reach Earth");
+	draw_fstring_center(&dbuf,  4, "Press Space to CONTINUE ");
 	draw_back_buffer(&dbuf);
 	sleep(100);
 	while(!wait_key());
@@ -56,16 +56,16 @@ int main()
 			reset_play();
 
 			// death message
-			if (player.live == PLAYER_MISS    ) draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "You missed the INVADER and it reached Earth");
-			if (player.live == PLAYER_SUICIDE ) draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "You committed suicide out of fear of the INVADER");
-			if (player.live == PLAYER_SHOTDOWN) draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "You were shot down by INVADER");
-			if (player.live == PLAYER_CRASH   ) draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "You crashed into the INVADER");
+			if (player.live == PLAYER_MISS    ) draw_fstring_center(&dbuf, - 8, "You missed the INVADER and it reached Earth");
+			if (player.live == PLAYER_SUICIDE ) draw_fstring_center(&dbuf, - 8, "You committed suicide out of fear of the INVADER");
+			if (player.live == PLAYER_SHOTDOWN) draw_fstring_center(&dbuf, - 8, "You were shot down by INVADER");
+			if (player.live == PLAYER_CRASH   ) draw_fstring_center(&dbuf, - 8, "You crashed into the INVADER");
 
-			draw_fstring_center(&dbuf, WINDOW_H / 2 - 4, "Score: %5d", score);
+			draw_fstring_center(&dbuf, -4, "Score: %5d", score);
 			
 			// info 
-			draw_fstring_center(&dbuf, WINDOW_H / 2 + 4, "Press Space to RESTART");
-			draw_fstring_center(&dbuf, WINDOW_H / 2 + 6, "Press ESC to EXIT");
+			draw_fstring_center(&dbuf,  4, "Press Space to RESTART");
+			draw_fstring_center(&dbuf,  6, "Press ESC to EXIT");
 			draw_back_buffer(&dbuf);
 			
 			loop = wait_key();

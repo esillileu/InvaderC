@@ -188,10 +188,10 @@ void draw_fstring_at(DoubleBuffer* p_dbuf, short x, short y, const char* fmt, ..
 	WriteConsoleA(hbuf, buf, (DWORD)n, &wr, NULL);
 }
 
-void draw_fstring_center(DoubleBuffer* p_dbuf, short y, const char* fmt, ...)
+void draw_fstring_center(DoubleBuffer* p_dbuf, short y_offset, const char* fmt, ...)
 {
 	DWORD wr;
-	COORD pos = { 0,  y };
+	COORD pos = { 0,   WINDOW_H / 2 + y_offset };
 	HANDLE hbuf = get_back_buffer(p_dbuf);
 	static char buf[512];
 
