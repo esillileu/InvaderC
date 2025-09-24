@@ -11,12 +11,10 @@ void create_enemies(void)
 	Heatmap* heatmap = get_heatmap(ENEMY);
 	Heatmap* heatmap_bullet = get_heatmap(ENEMY_BULLET);
 
-	short w = sprite->w, h = sprite->h;
+	short w = sprite->w, h = sprite->h, index = 0;
 	short margin = (WINDOW_W - (w + ENEMY_GAP) * ENEMY_ROW) / 2;
 	short out = 0;
-	
-	bound = create_obj(margin - ENEMY_GAP, 0, 0, 0);
-	
+		
 	for (int i = 0; i < ENEMY_COUNT / ENEMY_ROW + 1; i++)
 	{
 		for (int j = 0; j < ENEMY_ROW; j++)
@@ -45,6 +43,7 @@ void create_enemies(void)
 		}
 		if (out) break;
 	}
+	bound = create_obj(enemies[index].obj.pos.X, enemies[index].obj.pos.Y, 0, 0);
 }
 
 void update_enemies_position(void)
@@ -118,7 +117,7 @@ void update_enemies_kill_frame(void)
 	}
 }
 
-int check_bound_out(void) {
-	if (bound.pos.Y > WINDOW_H - enemies[0].obj.sprite->w +1) return 1;
+int check_enemy_bound_out(void) {
+	if (bound.pos.Y > WINDOW_H) return 1;
 	else return 0;
 }

@@ -120,7 +120,7 @@ static int play(int score_old)
 			counter.enemy_period = counter.enemy_period > TICK_FRAME ? TICK_FRAME * ENEMY_VE - ENEMY_AC * ((score + score_old) / SCORE_BASIC) : 0;
 
 			//gameover condition
-			if (check_bound_out()	){ player.live = PLAYER_MISS;		break; }
+			if (check_enemy_bound_out()	){ player.live = PLAYER_MISS;		break; }
 			if (kps.loop == LOOP_END){ player.live = PLAYER_SUICIDE;	break; }
 			if (colide				){ player.live = colide;			break; }        
 		}
