@@ -10,15 +10,18 @@ typedef struct _BULLET Bullet;
 typedef struct _ENEMY Enemy;
 typedef struct _PLAYER Player;
 
+Object2D create_obj(short x, short y, Sprite* sprite, Heatmap* heatmap);
 void init_obj(Object2D* obj, short x, short y, Sprite* sprite, Heatmap* heatmap);
 int check_colide(Object2D* obj1, Object2D* obj2);
-Object2D create_obj(short x, short y, Sprite* sprite, Heatmap* heatmap);
+int check_colide_all(int* score);
 
+// Enemy.c
 void create_enemies(void);
 void update_enemies_position(void);
 void update_enemies_kill_frame();
 int check_bound_out(void);
 
+// Player.c
 void create_player(void);
 void update_player_position(KeyProcess* p_key);
 int update_player_bullet(KeyProcess* p_key, int cooltime);

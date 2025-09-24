@@ -4,10 +4,10 @@
 TickManager counter;
 DoubleBuffer dbuf;
 KeyProcess key = { .loop = -1, .dx = 0, .dy = 0, .shotx = 0, .shoty = 0 };
-int score = 0;
+
+static int score = 0;
 
 static int play(int score_old);
-static int check_colide_all(int* score);
 static int wait_key();
 
 static void draw_all();
@@ -20,6 +20,7 @@ int main()
 
 	init_dbuffer(&dbuf, WINDOW_WIDTH, WINDOW_HEIGHT);
 	
+	// title screen
 	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "########  ###   ##    ######    #######   ########  ####### ");
 	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 7, "   ##     ####  ##   ##    ##   ##    ##  ##        ##    ##");
 	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 6, "   ##     ## ## ##   ########   ##    ##  ########  ####### ");
@@ -28,9 +29,11 @@ int main()
 	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 4, "Press Space to START ");
 	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 6, "Press ESC to EXIT");
 	draw_back_buffer(&dbuf);
+
 	loop = wait_key();
 	if (loop == 0) { free_dbuffer(&dbuf); return 0; } 
 
+	//intro
 	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "You are the last pilot standing against the INVADER");
 	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 6, "Shoot them down before INVADER reach Earth");
 	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 4, "Press Space to CONTINUE ");
@@ -38,55 +41,38 @@ int main()
 	sleep(100);
 	while(!wait_key());
 
+	//main loop
 	reset_play();
 	while (loop)
 	{
 		create_player();
 		create_enemies();
 		score = play(score);
+		
+		// game over
 		if (player.live != 1)
 		{
 			draw_player_explode();
+			reset_play();
 
+			// death message
 			if (player.live == PLAYER_MISS    ) draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "You missed the INVADER and it reached Earth");
 			if (player.live == PLAYER_SUICIDE ) draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "You committed suicide out of fear of the INVADER");
 			if (player.live == PLAYER_SHOTDOWN) draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "You were shot down by INVADER");
 			if (player.live == PLAYER_CRASH   ) draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "You crashed into the INVADER");
 
 			draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 4, "Score: %5d", score);
+			
+			// info 
 			draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 4, "Press Space to RESTART");
 			draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 6, "Press ESC to EXIT");
 			draw_back_buffer(&dbuf);
+			
 			loop = wait_key();
-			reset_play();
 		}
 	}
 	
 	free_dbuffer(&dbuf);
-	return 0;
-}
-
-static int check_colide_all(int* score)
-{
-	for (int i = 0; i < ENEMY_COUNT; i++)
-	{
-		if (enemies[i].bullet.shot && check_colide(&player.obj, &enemies[i].bullet)) return PLAYER_SHOTDOWN;
-		if (enemies[i].live == 1)
-		{
-			if (check_colide(&player.obj, &enemies[i].obj)) return PLAYER_CRASH;
-			
-			for (int j = 0; j < PLAYER_BULLET_MAX; j++)
-			{
-				if (player.bullet[j].shot && check_colide(&player.bullet[j], &enemies[i].obj))
-				{
-					enemies[i].live = -1;
-					player.bullet[j].shot = FALSE;
-					*score += 100;
-					counter.enemy_period -= counter.enemy_period > TICK_FRAME ? ENEMY_AC : 0;
-				}
-			}
-		}
-	}
 	return 0;
 }
 
@@ -134,10 +120,12 @@ static int play(int score_old)
 			draw_fstring_at(&dbuf, WINDOW_WIDTH - 11, 0, "score %5d", score + score_old);
 
 			//debug
-			draw_fstring_at(&dbuf, 0, WINDOW_HEIGHT - 1, "debug x:%2d y:%2d dx:%2d dy:%2d shot:%2d %2d",
+			draw_fstring_at(&dbuf, 0, WINDOW_HEIGHT - 1, "debug x:%2d y:%2d dx:%2d dy:%2d shot:%2d %2d ep: %5d ",
 				player.obj.pos.X, player.obj.pos.Y,
 				key.dx / (TICK_FRAME * PLAYER_VE) / 2, key.dy / (TICK_FRAME * PLAYER_VE),
-				key.shotx, key.shoty);
+				key.shotx, key.shoty, 
+				counter.enemy_period
+			);
 
 			draw_back_buffer(&dbuf);
 
@@ -145,8 +133,9 @@ static int play(int score_old)
 			colide = check_colide_all(&score);
 			if (check_bound_out()) { player.live = PLAYER_MISS;  break; }
 			if (key.loop==0) { player.live = PLAYER_SUICIDE;  break; }
-			if (colide) { player.live = colide;  break; }
-
+			if (colide) { player.live = colide;  break; }        
+			
+			counter.enemy_period = counter.enemy_period > TICK_FRAME ? TICK_FRAME * ENEMY_VE - ENEMY_AC * ((score + score_old) / SCORE_BASIC) : 0;
 		}
 	}
 	key.loop = 1;
