@@ -67,7 +67,7 @@ void init_dbuffer(DoubleBuffer* p_dbuf, short width, short height)
 
 	HWND hwnd = GetConsoleWindow();
 	CONSOLE_CURSOR_INFO con_info = { .bVisible = FALSE, .dwSize = 1 };
-	SMALL_RECT window_rect = { 0, 0, WINDOW_WIDTH - 1, WINDOW_HEIGHT - 1 };
+	SMALL_RECT window_rect = { 0, 0, WINDOW_W - 1, WINDOW_H - 1 };
 	SMALL_RECT tiny = { 0,0,0,0 };
 
 	CONSOLE_FONT_INFOEX cfi;
@@ -152,13 +152,13 @@ void draw_2d(DoubleBuffer* p_dbuf, Object2D* obj)
 
 	// X 클리핑
 	if (draw_x < 0) { start_x = -draw_x; draw_x = 0; }
-	if (draw_x + (end_x - start_x) > WINDOW_WIDTH)
-		end_x = start_x + (WINDOW_WIDTH - draw_x);
+	if (draw_x + (end_x - start_x) > WINDOW_W)
+		end_x = start_x + (WINDOW_W - draw_x);
 
 	// Y 클리핑
 	if (draw_y < 0) { start_y = -draw_y; draw_y = 0; }
-	if (draw_y + (end_y - start_y) > WINDOW_HEIGHT-1)
-		end_y = start_y + (WINDOW_HEIGHT-1 - draw_y);
+	if (draw_y + (end_y - start_y) > WINDOW_H-1)
+		end_y = start_y + (WINDOW_H-1 - draw_y);
 
 	pos.X = draw_x;
 	pos.Y = draw_y;
@@ -200,7 +200,7 @@ void draw_fstring_center(DoubleBuffer* p_dbuf, short y, const char* fmt, ...)
 	va_end(ap);
 
 	if (n < 0) n = (int)strlen(buf);           // 안전한 길이 보정
-	pos.X = (WINDOW_WIDTH - n-1) / 2;
+	pos.X = (WINDOW_W - n-1) / 2;
 	gotoxy(hbuf, pos);
 
 	WriteConsoleA(hbuf, buf, (DWORD)n, &wr, NULL);

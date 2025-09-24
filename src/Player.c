@@ -24,7 +24,7 @@ void create_player(void)
 	player.obj = create_obj(COORD_INIT_X-sprite->w, COORD_INIT_Y-sprite->h, sprite, heatmap);
 	player.live = 1;
 
-	for (int i = 0; i < PLAYER_BULLET_MAX; i++)
+	for (int i = 0; i < PLAYER_B_MAX; i++)
 	{
 		player.bullet[i].obj = create_obj(COORD_INIT_X, COORD_INIT_Y, sprite_bullet, heatmap_bullet);
 		player.bullet[i].shot = FALSE;
@@ -35,9 +35,9 @@ void create_player(void)
 
 void update_player_position(KeyProcess* p_key)
 {
-	short coordx = WINDOW_WIDTH - player.obj.sprite->w, coordy = WINDOW_HEIGHT - player.obj.sprite->h;
-	player.obj.pos.X += p_key->dx / (TICK_FRAME * PLAYER_VE);
-	player.obj.pos.Y += p_key->dy / (TICK_FRAME * PLAYER_VE);
+	short coordx = WINDOW_W - player.obj.sprite->w, coordy = WINDOW_H - player.obj.sprite->h;
+	player.obj.pos.X += p_key->dx / (TICK_FRAME * PLAYER_VS);
+	player.obj.pos.Y += p_key->dy / (TICK_FRAME * PLAYER_VS);
 	player.obj.current_frame = choose_player_frame(p_key);
 
 	if (player.obj.pos.X < 0) player.obj.pos.X = 0;
@@ -55,7 +55,7 @@ int update_player_bullet(KeyProcess* p_key, int cooltime)
 	if (cooltime && (p_key->shotx || p_key->shoty)) shot = 1;
 	
 	// loop bullet 
-	for (int i = 0; i < PLAYER_BULLET_MAX; i++)
+	for (int i = 0; i < PLAYER_B_MAX; i++)
 	{
 		if (player.bullet[i].shot)
 		{
@@ -66,8 +66,8 @@ int update_player_bullet(KeyProcess* p_key, int cooltime)
 			// boundary remove
 			if (player.bullet[i].obj.pos.X < 0
 				|| player.bullet[i].obj.pos.Y < 0
-				|| player.bullet[i].obj.pos.X > WINDOW_WIDTH
-				|| player.bullet[i].obj.pos.Y > WINDOW_HEIGHT)
+				|| player.bullet[i].obj.pos.X > WINDOW_W
+				|| player.bullet[i].obj.pos.Y > WINDOW_H)
 			{
 				player.bullet[i].shot = FALSE;
 			}

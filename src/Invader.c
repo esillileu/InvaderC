@@ -18,25 +18,25 @@ int main()
 {
 	int loop = 1;
 
-	init_dbuffer(&dbuf, WINDOW_WIDTH, WINDOW_HEIGHT);
+	init_dbuffer(&dbuf, WINDOW_W, WINDOW_H);
 	
 	// title screen
-	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "########  ###   ##    ######    #######   ########  ####### ");
-	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 7, "   ##     ####  ##   ##    ##   ##    ##  ##        ##    ##");
-	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 6, "   ##     ## ## ##   ########   ##    ##  ########  ####### ");
-	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 5, "   ##     ##  ####   ##    ##   ##    ##  ##        ##    ##");
-	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 4, "########  ##   ###   ##    ##   #######   ########  ##    ##");
-	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 4, "Press Space to START ");
-	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 6, "Press ESC to EXIT");
+	draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "########  ###   ##    ######    #######   ########  ####### ");
+	draw_fstring_center(&dbuf, WINDOW_H / 2 - 7, "   ##     ####  ##   ##    ##   ##    ##  ##        ##    ##");
+	draw_fstring_center(&dbuf, WINDOW_H / 2 - 6, "   ##     ## ## ##   ########   ##    ##  ########  ####### ");
+	draw_fstring_center(&dbuf, WINDOW_H / 2 - 5, "   ##     ##  ####   ##    ##   ##    ##  ##        ##    ##");
+	draw_fstring_center(&dbuf, WINDOW_H / 2 - 4, "########  ##   ###   ##    ##   #######   ########  ##    ##");
+	draw_fstring_center(&dbuf, WINDOW_H / 2 + 4, "Press Space to START ");
+	draw_fstring_center(&dbuf, WINDOW_H / 2 + 6, "Press ESC to EXIT");
 	draw_back_buffer(&dbuf);
 
 	loop = wait_key();
 	if (loop == 0) { free_dbuffer(&dbuf); return 0; } 
 
 	//intro
-	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "You are the last pilot standing against the INVADER");
-	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 6, "Shoot them down before INVADER reach Earth");
-	draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 4, "Press Space to CONTINUE ");
+	draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "You are the last pilot standing against the INVADER");
+	draw_fstring_center(&dbuf, WINDOW_H / 2 - 6, "Shoot them down before INVADER reach Earth");
+	draw_fstring_center(&dbuf, WINDOW_H / 2 + 4, "Press Space to CONTINUE ");
 	draw_back_buffer(&dbuf);
 	sleep(100);
 	while(!wait_key());
@@ -56,16 +56,16 @@ int main()
 			reset_play();
 
 			// death message
-			if (player.live == PLAYER_MISS    ) draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "You missed the INVADER and it reached Earth");
-			if (player.live == PLAYER_SUICIDE ) draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "You committed suicide out of fear of the INVADER");
-			if (player.live == PLAYER_SHOTDOWN) draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "You were shot down by INVADER");
-			if (player.live == PLAYER_CRASH   ) draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 8, "You crashed into the INVADER");
+			if (player.live == PLAYER_MISS    ) draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "You missed the INVADER and it reached Earth");
+			if (player.live == PLAYER_SUICIDE ) draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "You committed suicide out of fear of the INVADER");
+			if (player.live == PLAYER_SHOTDOWN) draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "You were shot down by INVADER");
+			if (player.live == PLAYER_CRASH   ) draw_fstring_center(&dbuf, WINDOW_H / 2 - 8, "You crashed into the INVADER");
 
-			draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 - 4, "Score: %5d", score);
+			draw_fstring_center(&dbuf, WINDOW_H / 2 - 4, "Score: %5d", score);
 			
 			// info 
-			draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 4, "Press Space to RESTART");
-			draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 6, "Press ESC to EXIT");
+			draw_fstring_center(&dbuf, WINDOW_H / 2 + 4, "Press Space to RESTART");
+			draw_fstring_center(&dbuf, WINDOW_H / 2 + 6, "Press ESC to EXIT");
 			draw_back_buffer(&dbuf);
 			
 			loop = wait_key();
@@ -80,7 +80,7 @@ static void draw_all()
 {
 	draw_2d(&dbuf, &player.obj);
 
-	for (int i = 0; i < PLAYER_BULLET_MAX; i++)
+	for (int i = 0; i < PLAYER_B_MAX; i++)
 		if (player.bullet[i].shot) draw_2d(&dbuf, &player.bullet[i].obj);
 
 
@@ -117,12 +117,12 @@ static int play(int score_old)
 
 			// draw
 			draw_all();
-			draw_fstring_at(&dbuf, WINDOW_WIDTH - 11, 0, "score %5d", score + score_old);
+			draw_fstring_at(&dbuf, WINDOW_W - 11, 0, "score %5d", score + score_old);
 
 			//debug
-			draw_fstring_at(&dbuf, 0, WINDOW_HEIGHT - 1, "debug x:%2d y:%2d dx:%2d dy:%2d shot:%2d %2d ep: %5d ",
+			draw_fstring_at(&dbuf, 0, WINDOW_H - 1, "debug x:%2d y:%2d dx:%2d dy:%2d shot:%2d %2d ep: %5d ",
 				player.obj.pos.X, player.obj.pos.Y,
-				key.dx / (TICK_FRAME * PLAYER_VE) / 2, key.dy / (TICK_FRAME * PLAYER_VE),
+				key.dx / (TICK_FRAME * PLAYER_VS) / 2, key.dy / (TICK_FRAME * PLAYER_VS),
 				key.shotx, key.shoty, 
 				counter.enemy_period
 			);
@@ -161,7 +161,7 @@ static void draw_player_explode()
 
 static void reset_play()
 {
-	init_tick(&counter, TICK_FRAME, TICK_FRAME * ENEMY_VE, TICK_FRAME * PLAYER_BULLET_DELAY);
+	init_tick(&counter, TICK_FRAME, TICK_FRAME * ENEMY_VE, TICK_FRAME * PLAYER_B_DELAY);
 	score = 0;
 	key.loop = 1;
 	key.dx = 0;

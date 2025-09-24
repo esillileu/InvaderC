@@ -54,7 +54,7 @@ int check_colide_all(int* score)
         {
             if (check_colide(&player.obj, &enemies[i].obj)) return PLAYER_CRASH;
 
-            for (int j = 0; j < PLAYER_BULLET_MAX; j++)
+            for (int j = 0; j < PLAYER_B_MAX; j++)
             {
                 if (player.bullet[j].shot && check_colide(&player.bullet[j], &enemies[i].obj))
                 {

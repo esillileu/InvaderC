@@ -1,33 +1,37 @@
 #pragma once
 
-// WINDOW
-#define WINDOW_WIDTH	64
-#define	WINDOW_HEIGHT	32
+// WINDOW - size by char
+#define WINDOW_W		64
+#define	WINDOW_H		32
 #define	WINDOW_FONTSIZE	12
 
-// PLAY
+// PLAY CONFIG
 #define TICK_FRAME		16
 #define SCORE_BASIC		100
 
-#define PLAYER_VX		8
-#define PLAYER_VY		4
-#define PLAYER_VE		2048
+// INIT COORD
+#define COORD_INIT_X	WINDOW_W / 2 
+#define COORD_INIT_Y	WINDOW_H / 2
 
-#define PLAYER_BULLET_MAX	4
-#define PLAYER_BULLET_DELAY 32
+// PLAYER
+#define PLAYER_VX		2
+#define PLAYER_VY		1
+#define PLAYER_VS		512	// normalizer: player velocity		- higher = slower
 
+// PLAYER BULLET
+#define PLAYER_B_MAX	4	
+#define PLAYER_B_DELAY	32
+
+//ENEMY
 #define ENEMY_COUNT		32
 #define ENEMY_ROW		8
 #define ENEMY_GAP		2
 
-#define ENEMY_VE		16
-#define ENEMY_AC		2
+#define ENEMY_VE		16	// multiplier: enemy tick			- higher = slower   
+#define ENEMY_AC		2	// multiplier: enemy acelleration	- higher = faster increase 
 
-#define ENEMY_BULLET_SCALE	1
-
-// COORD
-#define COORD_INIT_X	WINDOW_WIDTH  / 2 
-#define COORD_INIT_Y	WINDOW_HEIGHT / 2
+//ENEMY BULLET
+#define ENEMY_B_SCALE	1	// normalizer: enemy bullet count	- higher = lower count
 
 // KEY
 #define KEY_MOVE_LEFT	'A'

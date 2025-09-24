@@ -12,7 +12,7 @@ void create_enemies(void)
 	Heatmap* heatmap_bullet = get_heatmap(ENEMY_BULLET);
 
 	short w = sprite->w, h = sprite->h;
-	short margin = (WINDOW_WIDTH - (w + ENEMY_GAP) * ENEMY_ROW) / 2;
+	short margin = (WINDOW_W - (w + ENEMY_GAP) * ENEMY_ROW) / 2;
 	short out = 0;
 	
 	bound = create_obj(margin - ENEMY_GAP, 0, 0, 0);
@@ -57,7 +57,7 @@ void update_enemies_position(void)
 
 	//direction
 	if (bound.pos.X <= 0) { direction = 1; add_y = 1; }
-	if (bound.pos.X >= WINDOW_WIDTH - (w + ENEMY_GAP) * ENEMY_ROW + ENEMY_GAP) { direction = -1; add_y = 1; }
+	if (bound.pos.X >= WINDOW_W - (w + ENEMY_GAP) * ENEMY_ROW + ENEMY_GAP) { direction = -1; add_y = 1; }
 
 	bound.pos.X += direction;
 	bound.pos.Y += add_y;
@@ -81,7 +81,7 @@ void update_enemies_position(void)
 		}
 
 		//reset bullet
-		if (enemies[i].bullet.shot && enemies[i].bullet.obj.pos.Y > WINDOW_HEIGHT - 1) 
+		if (enemies[i].bullet.shot && enemies[i].bullet.obj.pos.Y > WINDOW_H - 1) 
 		{ 
 			enemies[i].bullet.shot = FALSE; 
 			enemies[i].bullet.obj.pos.Y = 0; 
@@ -91,7 +91,7 @@ void update_enemies_position(void)
 		}
 	}
 	
-	if (count < ENEMY_COUNT/ENEMY_BULLET_SCALE && (enemies[check_shot].live==1) && !enemies[check_shot].bullet.shot)
+	if (count < ENEMY_COUNT/ENEMY_B_SCALE && (enemies[check_shot].live==1) && !enemies[check_shot].bullet.shot)
 	{
 		enemies[check_shot].bullet.shot = TRUE;
 		enemies[check_shot].bullet.dx = 0;
@@ -119,6 +119,6 @@ void update_enemies_kill_frame()
 }
 
 int check_bound_out() {
-	if (bound.pos.Y > WINDOW_HEIGHT - enemies[0].obj.sprite->w +1) return 1;
+	if (bound.pos.Y > WINDOW_H - enemies[0].obj.sprite->w +1) return 1;
 	else return 0;
 }

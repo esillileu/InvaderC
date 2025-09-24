@@ -54,7 +54,7 @@ struct _ENEMY {
 
 struct _PLAYER {
 	Object2D obj;
-	Bullet bullet[PLAYER_BULLET_MAX]; 
+	Bullet bullet[PLAYER_B_MAX]; 
 
 	short live;
 };
