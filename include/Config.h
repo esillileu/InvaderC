@@ -19,10 +19,12 @@
 #define PLAYER_VS		512	// normalizer: player velocity		- higher = slower
 
 // PLAYER BULLET
+#define PLAYER_B_VX		2
+#define PLAYER_B_VY		1
 #define PLAYER_B_MAX	4	
 #define PLAYER_B_DELAY	32
 
-//ENEMY
+// ENEMY
 #define ENEMY_COUNT		32
 #define ENEMY_ROW		8
 #define ENEMY_GAP		2
@@ -30,7 +32,7 @@
 #define ENEMY_VE		16	// multiplier: enemy tick			- higher = slower   
 #define ENEMY_AC		2	// multiplier: enemy acelleration	- higher = faster increase 
 
-//ENEMY BULLET
+// ENEMY BULLET
 #define ENEMY_B_SCALE	1	// normalizer: enemy bullet count	- higher = lower count
 
 // KEY

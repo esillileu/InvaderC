@@ -195,19 +195,19 @@ void init_kps(KeyProcess* p_kps)
 void update_kps(KeyProcess* p_kps)
 {
 	// arrow kps update
-	p_kps->dy += (GetAsyncKeyState(KEY_MOVE_DOWN)  & 0x8000 ? PLAYER_VY : 0) 
-			   - (GetAsyncKeyState(KEY_MOVE_UP)    & 0x8000 ? PLAYER_VY : 0);
-	p_kps->dx += (GetAsyncKeyState(KEY_MOVE_RIGHT) & 0x8000 ? PLAYER_VX : 0) 
-		       - (GetAsyncKeyState(KEY_MOVE_LEFT)  & 0x8000 ? PLAYER_VX : 0);
+	p_kps->dy += (GetAsyncKeyState(KEY_MOVE_DOWN)  & 0x8000 ? 1 : 0) 
+			   - (GetAsyncKeyState(KEY_MOVE_UP)    & 0x8000 ? 1 : 0);
+	p_kps->dx += (GetAsyncKeyState(KEY_MOVE_RIGHT) & 0x8000 ? 1 : 0) 
+		       - (GetAsyncKeyState(KEY_MOVE_LEFT)  & 0x8000 ? 1 : 0);
 	
 	//attack kps update
-	if		(GetAsyncKeyState(KEY_SHOT_LEFT)	& 0x8000)	p_kps->shotx = -2;
-	else if (GetAsyncKeyState(KEY_SHOT_RIGHT)	& 0x8000)	p_kps->shotx =  2;
-	else													p_kps->shotx = 0;
+	if		(GetAsyncKeyState(KEY_SHOT_LEFT)	& 0x8000)	p_kps->shotx = -1;
+	else if (GetAsyncKeyState(KEY_SHOT_RIGHT)	& 0x8000)	p_kps->shotx =  1;
+	else													p_kps->shotx =  0;
 
 	if		(GetAsyncKeyState(KEY_SHOT_UP)	& 0x8000)	p_kps->shoty = -1;
 	else if (GetAsyncKeyState(KEY_SHOT_DOWN)& 0x8000)	p_kps->shoty =  1;
-	else												p_kps->shoty = 0;
+	else												p_kps->shoty =  0;
 
 
 	//loop signal

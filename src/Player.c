@@ -36,8 +36,8 @@ void create_player(void)
 void update_player_position(KeyProcess* p_key)
 {
 	short coordx = WINDOW_W - player.obj.sprite->w, coordy = WINDOW_H - player.obj.sprite->h;
-	player.obj.pos.X += p_key->dx / (TICK_FRAME * PLAYER_VS);
-	player.obj.pos.Y += p_key->dy / (TICK_FRAME * PLAYER_VS);
+	player.obj.pos.X += p_key->dx * PLAYER_VX / (TICK_FRAME * PLAYER_VS);
+	player.obj.pos.Y += p_key->dy * PLAYER_VY / (TICK_FRAME * PLAYER_VS);
 	player.obj.current_frame = choose_player_frame(p_key);
 
 	if (player.obj.pos.X < 0) player.obj.pos.X = 0;
@@ -60,8 +60,8 @@ int update_player_bullet(KeyProcess* p_key, int cooltime)
 		if (player.bullet[i].shot)
 		{
 			// move 
-			player.bullet[i].obj.pos.X += player.bullet[i].dx;
-			player.bullet[i].obj.pos.Y += player.bullet[i].dy;
+			player.bullet[i].obj.pos.X += player.bullet[i].dx * PLAYER_B_VX;
+			player.bullet[i].obj.pos.Y += player.bullet[i].dy * PLAYER_B_VY;
 			
 			// boundary remove
 			if (player.bullet[i].obj.pos.X < 0
