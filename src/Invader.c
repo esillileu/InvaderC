@@ -58,6 +58,7 @@ int main()
 			draw_fstring_center(&dbuf, WINDOW_HEIGHT / 2 + 6, "Press ESC to EXIT");
 			draw_back_buffer(&dbuf);
 			loop = wait_key();
+			reset_play();
 		}
 	}
 	
