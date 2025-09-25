@@ -3,9 +3,9 @@
 #include "Console.h"
 
 //dbuf func
-static void gotoxy(HANDLE hbuf, COORD pt) { SetConsoleCursorPosition(hbuf, pt); }
+static void gotoxy(Handle_ hbuf, Pos pt) { SetConsoleCursorPosition(hbuf, pt); }
 
-static HANDLE get_back_buffer(DoubleBuffer* p_dbuf) { return p_dbuf->hbuf[p_dbuf->idx]; }
+static Handle_ get_back_buffer(DoubleBuffer* p_dbuf) { return p_dbuf->hbuf[p_dbuf->idx]; }
 
 static void clear_back_buffer(DoubleBuffer* p_dbuf) {
 	DWORD n;
@@ -112,7 +112,7 @@ void draw_fstring_center(DoubleBuffer* p_dbuf, short y_offset, const char* fmt, 
 	WriteConsoleA(hbuf, buf, (DWORD)n, &wr, NULL);
 }
 
-void draw_2d(DoubleBuffer* p_dbuf, char* data, short W, short H, short frame, 
+void draw_2d(DoubleBuffer* p_dbuf, const char* data, short W, short H, short frame, 
 	short draw_x, short draw_y, short start_x, short start_y, short end_x, short end_y
 )
 {
@@ -179,7 +179,7 @@ int is_shot_tick(TickCounter* p_counter)
 	return 0;
 }
 
-int reset_tick(TickCounter* p_counter, ULONGLONG* tick) { *tick = GetTickCount64(); }
+void reset_tick(TickCounter* p_counter, Tick* tick) { *tick = GetTickCount64(); }
 
 
 //kps func

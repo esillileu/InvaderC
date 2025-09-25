@@ -16,7 +16,7 @@
 // PLAYER
 #define PLAYER_VX		2
 #define PLAYER_VY		1
-#define PLAYER_VS		512	// normalizer: player velocity		- higher = slower
+#define PLAYER_VS		256	// normalizer: player velocity		- higher = slower
 
 // PLAYER BULLET
 #define PLAYER_B_VX		2
@@ -25,7 +25,7 @@
 #define PLAYER_B_DELAY	32
 
 // ENEMY
-#define ENEMY_COUNT		32
+#define ENEMY_COUNT		4
 #define ENEMY_ROW		8
 #define ENEMY_GAP		2
 
