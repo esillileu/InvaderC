@@ -1,6 +1,6 @@
 #include "Object.h"
 
-void init_obj(Object2D* obj, short x, short y, Sprite* sprite, Heatmap*heatmap)
+void init_obj(Object2D* obj, short x, short y, const Sprite* sprite, const Heatmap*heatmap)
 {  
     obj->current_frame = 0;
     obj->pos.X = x;
@@ -9,7 +9,7 @@ void init_obj(Object2D* obj, short x, short y, Sprite* sprite, Heatmap*heatmap)
     obj->heatmap = heatmap;
 }
 
-Object2D create_obj(short x, short y, Sprite* sprite, Heatmap* heatmap)
+Object2D create_obj(short x, short y, const Sprite* sprite, const Heatmap* heatmap)
 {
     Object2D obj;
     obj.current_frame = 0;
@@ -76,14 +76,14 @@ int check_colide_all(int* score)
 {
     for (int i = 0; i < ENEMY_COUNT; i++)
     {
-        if (enemies[i].bullet.shot && check_colide(&player.obj, &enemies[i].bullet)) return PLAYER_SHOTDOWN;
+        if (enemies[i].bullet.shot && check_colide(&player.obj, &enemies[i].bullet.obj)) return PLAYER_SHOTDOWN;
         if (enemies[i].live == 1)
         {
             if (check_colide(&player.obj, &enemies[i].obj)) return PLAYER_CRASH;
 
             for (int j = 0; j < PLAYER_B_MAX; j++)
             {
-                if (player.bullet[j].shot && check_colide(&player.bullet[j], &enemies[i].obj))
+                if (player.bullet[j].shot && check_colide(&player.bullet[j].obj, &enemies[i].obj))
                 {
                     enemies[i].live = -1;
                     player.bullet[j].shot = FALSE;

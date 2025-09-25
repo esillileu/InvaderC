@@ -6,10 +6,10 @@ short direction = -1;
 
 void create_enemies(void)
 {
-	Sprite* sprite = get_sprite(ENEMY);
-	Sprite* sprite_bullet = get_sprite(ENEMY_BULLET);
-	Heatmap* heatmap = get_heatmap(ENEMY);
-	Heatmap* heatmap_bullet = get_heatmap(ENEMY_BULLET);
+	const Sprite* sprite = get_sprite(ENEMY);
+	const Sprite* sprite_bullet = get_sprite(ENEMY_BULLET);
+	const Heatmap* heatmap = get_heatmap(ENEMY);
+	const Heatmap* heatmap_bullet = get_heatmap(ENEMY_BULLET);
 
 	short w = sprite->w, h = sprite->h, index = 0;
 	short margin = (WINDOW_W - (w + ENEMY_GAP) * ENEMY_ROW) / 2;

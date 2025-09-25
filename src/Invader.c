@@ -150,6 +150,6 @@ static void draw_all(void)
 	for (int i = 0; i < ENEMY_COUNT; i++)
 	{
 		if (enemies[i].live != 0)	draw_obj(&dbuf, &enemies[i].obj);
-		if (enemies[i].bullet.shot)	draw_obj(&dbuf, &enemies[i].bullet);
+		if (enemies[i].bullet.shot)	draw_obj(&dbuf, &enemies[i].bullet.obj);
 	}
 }

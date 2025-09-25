@@ -6,6 +6,8 @@
 
 //alias
 typedef COORD Pos;
+typedef ULONGLONG Tick;
+typedef HANDLE Handle_;
 
 //types
 typedef struct _DOUBLEBUFFER DoubleBuffer;
@@ -19,17 +21,17 @@ void draw_back_buffer(DoubleBuffer* p_dbuf);
 void draw_fstring_at(DoubleBuffer* p_dbuf, short x, short y, const char* fmt, ...);
 void draw_fstring_center(DoubleBuffer* p_dbuf, short y, const char* fmt, ...);
 void draw_2d(DoubleBuffer* p_dbuf,
-	char* data, short W, short H, short frame, short draw_x, short draw_y,
+	const char* data, short W, short H, short frame, short draw_x, short draw_y,
 	short start_x, short start_y, short end_x, short end_y
 );
 
 //tick func
 void init_tick(TickCounter* p_counter, short player_period, short enemy_period, short shot_tick);
 void tick(TickCounter* p_counter);
+void reset_tick(TickCounter* p_counter, Tick* tick);
 int is_player_tick(TickCounter* p_counter);
 int is_enemy_tick(TickCounter* p_counter);
 int is_shot_tick(TickCounter* p_counter);
-int reset_tick(TickCounter* p_counter, ULONGLONG* tick);
 
 //kps func
 void init_kps(KeyProcess* p_kps);
@@ -41,19 +43,19 @@ void sleep_ms(int ms);
 
 //types
 struct _DOUBLEBUFFER {
-	HANDLE hbuf[2];
+	Handle_ hbuf[2];
 	int idx;
-	COORD size;
+	Pos size;
 };
 
 struct _TICKCOUNTER {
 	short		player_period;
 	short		enemy_period;
 	short		shot_period;
-	ULONGLONG   tick;
-	ULONGLONG   player_tick;
-	ULONGLONG   enemy_tick;
-	ULONGLONG	shot_tick;
+	Tick   tick;
+	Tick   player_tick;
+	Tick   enemy_tick;
+	Tick	shot_tick;
 };
 
 struct _KEYPROCESS {
