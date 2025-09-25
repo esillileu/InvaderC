@@ -29,7 +29,7 @@ void init_dbuffer(DoubleBuffer* p_dbuf, short width, short height)
 
 	CONSOLE_FONT_INFOEX cfi;
 	cfi.cbSize = sizeof(cfi);	
-	wcscpy(cfi.FaceName, L"D2Coding"); // 글꼴 이름 (Wide string)
+	wcscpy(cfi.FaceName, L"D2Coding");
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -67,7 +67,7 @@ void free_dbuffer(DoubleBuffer* p_dbuf) {
 	if (!p_dbuf) return;
 	for (int i = 0; i < 2; ++i) if (p_dbuf->hbuf[i] && p_dbuf->hbuf[i] != INVALID_HANDLE_VALUE)
 		CloseHandle(p_dbuf->hbuf[i]);
-	// 기본 표준 버퍼로 복귀
+
 	SetConsoleActiveScreenBuffer(GetStdHandle(STD_OUTPUT_HANDLE));
 }
 
@@ -90,7 +90,7 @@ void draw_fstring_at(DoubleBuffer* p_dbuf, short x, short y, const char* fmt, ..
 
 	gotoxy(hbuf, pos);
 
-	if (n < 0) n = (int)strlen(buf);           // 안전한 길이 보정
+	if (n < 0) n = (int)strlen(buf);           
 	WriteConsoleA(hbuf, buf, (DWORD)n, &wr, NULL);
 }
 
@@ -105,7 +105,7 @@ void draw_fstring_center(DoubleBuffer* p_dbuf, short y_offset, const char* fmt, 
 	int n = _vsnprintf_s(buf, sizeof(buf), _TRUNCATE, fmt, ap);
 	va_end(ap);
 
-	if (n < 0) n = (int)strlen(buf);           // 안전한 길이 보정
+	if (n < 0) n = (int)strlen(buf);   
 	pos.X = (WINDOW_W - n - 1) / 2;
 	gotoxy(hbuf, pos);
 
