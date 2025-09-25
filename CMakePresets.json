@@ -6,7 +6,7 @@
     {
       "name": "msvc-x64-debug",
       "displayName": "MSVC Debug (Windows)",
-      "generator": "Ninja",
+      "generator": "Visual Studio 17 2022",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
