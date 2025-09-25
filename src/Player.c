@@ -16,10 +16,10 @@ static int choose_player_frame(KeyProcess* p_key) {
 
 void create_player(void)
 {
-	Sprite* sprite = get_sprite(PLAYER);
-	Sprite* sprite_bullet = get_sprite(PLAYER_BULLET);
-	Heatmap* heatmap = get_heatmap(PLAYER);
-	Heatmap* heatmap_bullet = get_heatmap(PLAYER_BULLET);
+	const Sprite* sprite = get_sprite(PLAYER);
+	const Sprite* sprite_bullet = get_sprite(PLAYER_BULLET);
+	const Heatmap* heatmap = get_heatmap(PLAYER);
+	const Heatmap* heatmap_bullet = get_heatmap(PLAYER_BULLET);
 
 	player.obj = create_obj(COORD_INIT_X-sprite->w, COORD_INIT_Y-sprite->h, sprite, heatmap);
 	player.live = 1;
