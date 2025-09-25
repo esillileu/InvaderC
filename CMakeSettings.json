@@ -10,6 +10,16 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
+    }, 
+      {
+      "name": "x64-Debug-GCC",
+      "generator": "Unix Makefiles",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}/out/build/${name}",
+      "installRoot": "${projectDir}/out/install/${name}",
+      "cmakeCommandArgs": "-DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": ""
     }
   ]
 }
