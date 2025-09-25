@@ -13,8 +13,8 @@ extern Enemy enemies[ENEMY_COUNT];
 extern Player player;
 
 // Object.c
-Object2D create_obj(short x, short y, Sprite* sprite, Heatmap* heatmap);
-void init_obj(Object2D* obj, short x, short y, Sprite* sprite, Heatmap* heatmap);
+Object2D create_obj(short x, short y, const Sprite* sprite, const Heatmap* heatmap);
+void init_obj(Object2D* obj, short x, short y, const Sprite* sprite, const Heatmap* heatmap);
 int check_colide(Object2D* obj1, Object2D* obj2);
 int check_colide_all(int* score);
 void draw_obj(DoubleBuffer* p_dbuf, Object2D* obj);
@@ -36,8 +36,8 @@ struct _OBJECT2D {
 	short current_frame;
 
 	Pos pos;
-	Sprite* sprite;
-	Heatmap* heatmap;
+	const Sprite* sprite;
+	const Heatmap* heatmap;
 }; 
 
 struct _BULLET {
