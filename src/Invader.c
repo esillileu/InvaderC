@@ -118,6 +118,9 @@ static int play(int score_old)
 			//colide 
 			colide = check_colide_all(&score);
 			counter.enemy_period = counter.enemy_period > TICK_FRAME ? TICK_FRAME * ENEMY_VE - ENEMY_AC * ((score + score_old) / SCORE_BASIC) : 0;
+			
+			//reset
+			reset_kps_dxy(&kps);
 
 			//gameover condition
 			if (check_enemy_bound_out()	){ player.live = PLAYER_MISS;		break; }

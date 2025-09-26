@@ -37,6 +37,7 @@ int is_shot_tick(TickCounter* p_counter);
 void init_kps(KeyProcess* p_kps);
 void update_kps(KeyProcess* p_kps);
 int wait_kps(KeyProcess* p_kps);
+void reset_kps_dxy(KeyProcess* p_kps);
 
 //etc
 void sleep_ms(int ms);

@@ -212,6 +212,8 @@ void update_kps(KeyProcess* p_kps)
 	else												p_kps->loop = LOOP_CONTINUE; 
 }
 
+void reset_kps_dxy(KeyProcess* p_kps) { p_kps->dx = 0; p_kps->dy = 0;}
+
 int wait_kps(KeyProcess* p_kps)
 {
 	while (1)
