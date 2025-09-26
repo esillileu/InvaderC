@@ -106,11 +106,11 @@ static int play(int score_old)
 			draw_fstring_at(&dbuf, WINDOW_W - 11, 0, "score %5d", score + score_old);
 
 			//debug
-			draw_fstring_at(&dbuf, 0, WINDOW_H - 1, "debug x:%2d y:%2d dx:%2d dy:%2d shot:%2d %2d score: %5d ",
+			draw_fstring_at(&dbuf, 0, WINDOW_H - 1, "debug x:%2d y:%2d dx:%2d dy:%2d shot:%2d %2d bound y: %2d",
 				player.obj.pos.X, player.obj.pos.Y,
 				kps.dx / (TICK_FRAME * PLAYER_VS) / 2, kps.dy / (TICK_FRAME * PLAYER_VS),
 				kps.shotx, kps.shoty, 
-				score
+				bound.pos.Y
 			);
 
 			draw_back_buffer(&dbuf);
@@ -124,8 +124,8 @@ static int play(int score_old)
 
 			//gameover condition
 			if (check_enemy_bound_out()	){ player.live = PLAYER_MISS;		break; }
-			if (kps.loop == LOOP_END){ player.live = PLAYER_SUICIDE;	break; }
-			if (colide				){ player.live = colide;			break; }        
+			if (kps.loop == LOOP_END	){ player.live = PLAYER_SUICIDE;	break; }
+			if (colide					){ player.live = colide;			break; }        
 		}
 	}
 	return score + score_old;

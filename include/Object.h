@@ -9,6 +9,7 @@ typedef struct _ENEMY Enemy;
 typedef struct _PLAYER Player;
 
 // global variables
+extern Object2D bound;
 extern Enemy enemies[ENEMY_COUNT];
 extern Player player;
 

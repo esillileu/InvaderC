@@ -118,6 +118,6 @@ void update_enemies_kill_frame(void)
 }
 
 int check_enemy_bound_out(void) {
-	if (bound.pos.Y > WINDOW_H) return 1;
+	if (bound.pos.Y > WINDOW_H - 1 ) return 1;
 	else return 0;
 }
