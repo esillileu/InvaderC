@@ -137,7 +137,7 @@ static void reset_play(void)
 	init_tick(&counter, TICK_FRAME, TICK_FRAME * ENEMY_VE, TICK_FRAME * PLAYER_B_DELAY);
 
 	//reset kps
-	kps.loop = -1, kps.dx = 0, kps.dy = 0;
+	kps.loop = LOOP_CONTINUE, kps.dx = 0, kps.dy = 0;
 	player.live = 1;
 	score = 0;
 }
