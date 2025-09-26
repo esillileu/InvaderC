@@ -10,10 +10,10 @@ static int choose_bullet_frame(Bullet* bullet) {
 	else											return BULLET_X;
 }
 
-static int choose_player_frame(KeyProcess* p_key) {
-	if (p_key->dy == 0 && p_key->dx == 0)		return PLAYER_STOP;
-	if (abs(p_key->dy) >= abs(p_key->dx))	return (p_key->dy >= 0) ? PLAYER_DOWN : PLAYER_UP;
-	else									return (p_key->dx >= 0) ? PLAYER_RIGHT : PLAYER_LEFT;
+static int choose_player_frame(KeyProcess* p_kps) {
+	if (p_kps->dy == 0 && p_kps->dx == 0)		return PLAYER_STOP;
+	if (abs(p_kps->dy) >= abs(p_kps->dx))	return (p_kps->dy >= 0) ? PLAYER_DOWN : PLAYER_UP;
+	else									return (p_kps->dx >= 0) ? PLAYER_RIGHT : PLAYER_LEFT;
 }
 
 void create_player(void)
@@ -35,26 +35,24 @@ void create_player(void)
 	}
 }
 
-void update_player_position(KeyProcess* p_key)
+void update_player_position(KeyProcess* p_kps)
 {
 	short coordx = WINDOW_W - player.obj.sprite->w, coordy = WINDOW_H - player.obj.sprite->h;
-	player.obj.pos.X += p_key->dx * PLAYER_VX / (TICK_FRAME * PLAYER_VS);
-	player.obj.pos.Y += p_key->dy * PLAYER_VY / (TICK_FRAME * PLAYER_VS);
-	player.obj.current_frame = choose_player_frame(p_key);
+	player.obj.pos.X += p_kps->dx * PLAYER_VX / (TICK_FRAME * PLAYER_VS);
+	player.obj.pos.Y += p_kps->dy * PLAYER_VY / (TICK_FRAME * PLAYER_VS);
+	player.obj.current_frame = choose_player_frame(p_kps);
 
 	if (player.obj.pos.X < 0) player.obj.pos.X = 0;
 	if (player.obj.pos.Y < 0) player.obj.pos.Y = 0;
 	if (player.obj.pos.X > coordx)  player.obj.pos.X = coordx;
 	if (player.obj.pos.Y > coordy) player.obj.pos.Y = coordy;
-
-	p_key->dx = 0; p_key->dy = 0;
 }
 
-int update_player_bullet(KeyProcess* p_key, int cooltime)
+int update_player_bullet(KeyProcess* p_kps, int cooltime)
 {
 	short shot = 0, sucess = 0;
 	// check key input
-	if (cooltime && (p_key->shotx || p_key->shoty)) shot = 1;
+	if (cooltime && (p_kps->shotx || p_kps->shoty)) shot = 1;
 	
 	// loop bullet 
 	for (int i = 0; i < PLAYER_B_MAX; i++)
@@ -75,15 +73,14 @@ int update_player_bullet(KeyProcess* p_key, int cooltime)
 			}
 		}
 
-
 		// shot
 		else if (shot)
 		{
 			player.bullet[i].obj.pos.X = player.obj.pos.X + player.obj.sprite->w / 2 - player.bullet[i].obj.sprite->w /2;
 			player.bullet[i].obj.pos.Y = player.obj.pos.Y + player.obj.sprite->h / 2;
 			player.bullet[i].shot = TRUE;
-			player.bullet[i].dx = p_key->shotx;
-			player.bullet[i].dy = p_key->shoty;
+			player.bullet[i].dx = p_kps->shotx;
+			player.bullet[i].dy = p_kps->shoty;
 			player.bullet[i].obj.current_frame = choose_bullet_frame(&player.bullet[i]);
 			shot = 0;
 			sucess = 1;
