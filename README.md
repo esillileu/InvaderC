@@ -36,3 +36,12 @@
     ```bash
     conhost.exe .\msvc-x64-debug\Debug\InvaderC.exe
     ```
+## known issues
+- character movement issue
+    > caused by tick delay
+    - use conhost to run program (Window step 5) not Window Terminal
+    - lowering PLAYER_VS in Config.h
+- console screen tearing
+    > caused by failure of window size change
+    - use conhost to run program (Window step 5) not Window Terminal
+    - if you want to use window terminal, set inital size to match the WINDOW_W, WINDOW_H in config.c
