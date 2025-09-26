@@ -16,9 +16,12 @@
         ```
     - download zip
         - unzip -> go inside of the folder
+
 ### Window
-1. Install [CMake](https://cmake.org/download/) 
-2. install [Visual Studio 2022](https://visualstudio.microsoft.com/ko/downloads/). make sure you checked ***Desktop Development using C++*** 
+1. install [Visual Studio 2022](https://visualstudio.microsoft.com/ko/downloads/). make sure you checked ***Desktop Development using C++*** 
+
+#### CMake
+2. Install [CMake](https://cmake.org/download/) 
 3. make build folder
     ```bash
     mkdir -p out/build
@@ -26,7 +29,7 @@
     ```
 4. make build cache with preset
     ```bash
-    cmake ../.. ----preset msvc-debug
+    cmake ../.. --preset msvc-x64-debug
     camke --build msvc-x64-debug
     ```
 5. start game with conhost
