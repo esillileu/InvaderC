@@ -10,8 +10,18 @@
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
+        "CMAKE_CXX_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "msvc-x64-release",
+      "displayName": "MSVC Release (Windows)",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl",
         "CMAKE_CXX_COMPILER": "cl",
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
@@ -40,6 +50,7 @@
 
   "buildPresets": [
     { "name": "msvc-debug", "configurePreset": "msvc-x64-debug" },
+    { "name": "msvc-release", "configurePreset": "msvc-x64-release" },
     { "name": "gcc-debug", "configurePreset": "gcc-x64-debug" },
     { "name": "gcc-release", "configurePreset": "gcc-x64-release" }
   ]
