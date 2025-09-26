@@ -18,11 +18,11 @@ int main(void)
 	init_kps(&kps);
 	
 	// title screen
-	draw_fstring_center(&dbuf, -8, "########  ###   ##    ######    #######   ########  ####### ");
-	draw_fstring_center(&dbuf, -7, "   ##     ####  ##   ##    ##   ##    ##  ##        ##    ##");
-	draw_fstring_center(&dbuf, -6, "   ##     ## ## ##   ########   ##    ##  ########  ####### ");
-	draw_fstring_center(&dbuf, -5, "   ##     ##  ####   ##    ##   ##    ##  ##        ##    ##");
-	draw_fstring_center(&dbuf, -4, "########  ##   ###   ##    ##   #######   ########  ##    ##");
+	draw_fstring_center(&dbuf, -8, "########  ###   ##   ######   #######   ########  ####### ");
+	draw_fstring_center(&dbuf, -7, "   ##     ####  ##  ##    ##  ##    ##  ##        ##    ##");
+	draw_fstring_center(&dbuf, -6, "   ##     ## ## ##  ########  ##    ##  ########  ####### ");
+	draw_fstring_center(&dbuf, -5, "   ##     ##  ####  ##    ##  ##    ##  ##        ##    ##");
+	draw_fstring_center(&dbuf, -4, "########  ##   ###  ##    ##  #######   ########  ##    ##");
 	draw_fstring_center(&dbuf,  4, "Press Space to START");
 	draw_fstring_center(&dbuf,  6, "Press ESC to EXIT");
 	draw_back_buffer(&dbuf);
