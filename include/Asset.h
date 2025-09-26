@@ -17,6 +17,7 @@ struct _Heatmap {
 	const char* data;
 };
 
+// if sprite add, add this enum 
 enum _SpriteId {
 	PLAYER,
 	ENEMY,  
@@ -24,6 +25,7 @@ enum _SpriteId {
 	ENEMY_BULLET,
 };
 
+// if case-base sprite add, add enum like following enums
 enum _PlayerSptiteId {
 	PLAYER_STOP,
 	PLAYER_UP,

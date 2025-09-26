@@ -1,3 +1,14 @@
+/*
+sprite dim	: [frame * height * width]	= [F * H * W]
+heatmap dim	: [height * width]			= [H * W]
+
+when changing or adding sprite/heatmap sizes, 
+adjust the string length to match the dim above 
+and update the content. 
+
+then register it in the sprite/heatmap array 
+at the bottom using the corresponding dim and string name.
+*/
 #include "Asset.h"
 
 static const char player[13 * 3 * 7] =
